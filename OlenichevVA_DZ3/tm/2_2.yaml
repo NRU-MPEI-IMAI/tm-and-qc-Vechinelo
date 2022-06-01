@@ -1,0 +1,67 @@
+name: binary increment
+source code: |-
+  input: '(([{}])'
+  blank: ' '
+  start state: start
+
+
+  table:
+    start:
+      ' ': {L: ok}    
+      ['(', '[', '{']: {R: search_rb}
+      [')', ']', '}']: {L: bad}
+      
+    search_rb:
+      ' ': {L: eol}    
+      ['(', '[', '{', 'x']: R
+      ')': {write: 'x', L: rb_1}
+      ']': {write: 'x', L: rb_2}
+      '}': {write: 'x', L: rb_3}
+    
+    rb_1:
+      ' ': {R: bad}
+      '(': {write: 'x', R:  search_rb}
+      ['[', '{']: {L: bad}
+      'x': L
+    
+    rb_2:
+      ' ': {R: bad}
+      '[': {write: 'x', R: search_rb}
+      ['(', '{']: {L: bad}
+      'x': L
+
+    rb_3:
+      ' ': {R: bad}
+      '{': {write: 'x', R: search_rb}
+      ['[', '(']: {L: bad}
+      'x': L 
+      
+    eol:
+      ['(', '[', '{']: {L: bad} 
+      'x': L
+      ' ': {R: ok}
+      
+    bad:
+      ['(', ')', '[', ']', '{', '}', 'x']: {write: ' ', R}
+      ' ': {R: go_head}
+    
+    go_head:
+      ['(', ')', '[', ']', '{', '}', 'x']: {write: ' ', R: go_head}
+      ' ': {write: 0, L: fin}
+      
+    ok:
+      ' ': {write: 1, L: fin}
+      'x': {write: ' ', R}
+
+    fin:
+positions:
+  start: {x: 694.59, y: 341.62}
+  search_rb: {x: 520.04, y: 367.39, fixed: false}
+  rb_1: {x: 421.09, y: 462.12, fixed: false}
+  rb_2: {x: 376.02, y: 389.25, fixed: false}
+  rb_3: {x: 376.83, y: 315.84, fixed: false}
+  eol: {x: 489.7, y: 206.65, fixed: false}
+  bad: {x: 511.76, y: 329.51, fixed: false}
+  go_head: {x: 398.8, y: 213.17, fixed: false}
+  ok: {x: 631.08, y: 193.83, fixed: false}
+  fin: {x: 503.69, y: 106.85, fixed: false}

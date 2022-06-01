@@ -1,0 +1,28 @@
+
+source code: |
+
+  input: 1111+11 
+  blank: ' '
+  start state: start
+
+  table:
+    
+    start:  
+          1: R
+          '+': {write: '1', R: go_tail}
+    go_tail:
+          1: R
+          ' ': {L: del}
+    del:
+          1: {write: ' ', L: go_head}
+          
+    go_head:
+          1: L
+          ' ': {R: fin}
+    fin:
+positions:
+  start: {x: 175.62, y: 102.1}
+  go_tail: {x: 260.78, y: 225.17, fixed: false}
+  del: {x: 400.6, y: 221.97}
+  go_head: {x: 535.65, y: 194.77, fixed: false}
+  fin: {x: 535.46, y: 339.98}

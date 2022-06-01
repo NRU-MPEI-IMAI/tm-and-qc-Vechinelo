@@ -1,0 +1,62 @@
+name: binary increment
+source code: |
+  input: '11*111'
+  blank: ' '
+  start state: set_eq
+  table:
+
+    set_eq:
+          [1,'*']: R
+          ' ': {write: '=', L: go_head}
+    
+    go_head:
+            [1,'*']: L
+            [' ', x]: {R: go_mul}
+    
+    go_mul:
+          1: {write: x, R: go_second}
+          x: R
+          '*': {L: go_first}
+    
+    go_second:
+          1: R
+          '*': {R: second}
+    
+    second:
+          1: {write: x, R: to_ans}
+          x: R
+          =: {L: res_second}
+    
+    to_ans:
+          [1, =]: R
+          ' ': {write: 1, L: back_second}
+    
+    back_second:
+          [1, =]: L
+          x: {R: second}
+          
+    res_second:
+          x: {write: 1, L}
+          '*': {L: go_head}
+    
+    go_first:
+          x: L
+          ' ': {R: clear}
+    
+    clear:
+          [1,'*',x]: {write: ' ', R}
+          =: {write: ' ', R: fin}
+    fin:
+          
+positions:
+  set_eq: {x: 362.02, y: 480, fixed: false}
+  go_head: {x: 345.02, y: 341.9, fixed: false}
+  go_mul: {x: 454.77, y: 242.85, fixed: false}
+  go_second: {x: 413.9, y: 97.41, fixed: false}
+  second: {x: 265.76, y: 87.15}
+  to_ans: {x: 304.8, y: 218.24, fixed: false}
+  back_second: {x: 160, y: 181.17, fixed: false}
+  res_second: {x: 237.38, y: 239.43, fixed: false}
+  go_first: {x: 582.26, y: 327.43, fixed: false}
+  clear: {x: 660.61, y: 202.49, fixed: false}
+  fin: {x: 537.77, y: 262.93, fixed: false}

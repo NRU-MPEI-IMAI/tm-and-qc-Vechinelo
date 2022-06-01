@@ -1,0 +1,57 @@
+name: binary increment
+source code: |-
+  input: '001122'
+  blank: ' '
+  start state: start
+
+
+  table:
+    start:
+      ' ': {L: good_word}    
+      0: {write: X, R: go_one} 
+      [1, 2]: {R: bad_word}
+      X: R    
+    
+    go_one:
+      1: {write: X, R: go_two}
+      [' ', 2]: {R: bad_word}
+      [X, 0]: R
+    
+    go_two:
+      2: {write: X, L: go_head}
+      ' ': {R: bad_word}
+      [X, 1]: R
+    
+    go_head:
+      ' ': {R: start}
+      [0,1,2,X]: L
+    
+    good_word:
+      ' ': {write: 1, L: to_fin}
+      X: {write: ' ', L}
+    
+    bad_word:
+      ' ': {L: clear}
+      [0, 1, 2, X]: R
+    
+    clear:
+      ' ': {write: 0, L: to_fin}
+      [0, 1, 2, X]: {write: ' ', L} 
+
+    to_fin:
+      ' ': {R: fin}
+    
+    fin:
+      
+    
+    
+positions:
+  start: {x: 555.06, y: 394.95}
+  go_one: {x: 563.37, y: 236.41, fixed: false}
+  go_two: {x: 517.47, y: 369.28, fixed: false}
+  go_head: {x: 638.13, y: 281.6, fixed: false}
+  good_word: {x: 398.77, y: 402.92, fixed: false}
+  bad_word: {x: 433.62, y: 273.18, fixed: false}
+  clear: {x: 351.3, y: 151.83, fixed: false}
+  to_fin: {x: 298.09, y: 290.35, fixed: false}
+  fin: {x: 194.16, y: 191.8, fixed: false}

@@ -1,0 +1,266 @@
+name: binary increment
+source code: |-
+  input: '1010 010 1'
+  blank: ' '
+  start state: first_word
+  table:
+    
+    first_word:
+      0: {write: a, R: to_second}
+      1: {write: b, R: to_second}
+      [a, b]: R
+      ' ': {L: first_is_small}
+    
+    to_second:
+      [0, 1]: R
+      ' ': {R: second_word}
+   
+    second_word:
+      ' ': {L: one_left}
+      0: {write: a, L: to_first}
+      1: {write: b, L: to_first}
+      [a, b]: {R: second_not_null}
+    
+    second_not_null:
+      [a, b]: R
+      0: {write: a, L: to_first}
+      1: {write: b, L: to_first}
+      ' ': {L: second_is_small}
+    
+    to_first:
+      [a, b]: L
+      ' ': {L: to_begin_first}
+
+    to_begin_first:
+      [0, 1, a, b]: L
+      ' ': {R: first_word}
+
+    one_left:
+      ' ': {L: restore_and_exit}
+
+    restore_and_exit:
+      a: {write: 0, L}
+      b: {write: 1, L}
+      [0, 1]: L
+      ' ': {R: fin}
+    
+    # первое меньше, замена 2-го на 1-е
+    first_is_small:
+      [a, b]: L
+      ' ': {R: restore_first}
+
+    restore_first:
+      a: {write: 0, R}
+      b: {write: 1, R}
+      ' ': {R: cut_second}
+
+    cut_second:
+      [a, b, 0, 1]: {write: a, R}
+      ' ': {L: return_and_copy}
+
+    return_and_copy:
+      a: L
+      ' ': {L: copy_first}
+
+    copy_first:
+      [a, b]: L
+      0: {write: a, R: carry0}
+      1: {write: b, R: carry1}
+      ' ': {R: delete_to_word}
+
+    carry0:
+      [a, b]: R
+      ' ': {R: carry0_in_second}
+
+    carry0_in_second:
+      a: R
+      [0, 1, ' ']: {L: set0_and_return}
+
+    set0_and_return:
+      a: {write: 0, L: return_and_copy}
+      ' ': {L: return_and_copy}
+
+    carry1:
+      [a, b]: R
+      ' ': {R: carry1_in_second}
+    carry1_in_second:
+      a: R
+      [0, 1, ' ']: {L: set1_and_return}
+    set1_and_return:
+      a: {write: 1, L: return_and_copy}
+      ' ': {L: return_and_copy}
+
+    delete_to_word:
+      [a, b]: {write: ' ', R}
+      [0, 1]: {L: to_begin_first}
+      ' ': {R: delete_to_word_in_sec}
+
+    delete_to_word_in_sec:
+      [a, b]: {write: ' ', R}
+      [0, 1]: {L: to_begin_first}
+      ' ': {R: fin}
+    
+    # второе слово оказалось меньше
+    second_is_small:
+      [a, b]: L
+      ' ': {L: to_begin_first_and_del}
+
+    to_begin_first_and_del:
+      [0, 1, a, b]: L
+      ' ': {R: delete_first}
+
+    delete_first:
+      [0, 1, a, b]: {write: ' ', R}
+      ' ': {R: restore_second}
+
+    restore_second:
+      a: {write: 0, R}
+      b: {write: 1, R}
+      ' ': {L: to_begin_first}
+    fin:
+positions:
+  first_word: {x: 426.71, y: 110.72, fixed: false}
+  to_second: {x: 322.48, y: 20, fixed: false}
+  second_word: {x: 200.2, y: 20, fixed: false}
+  second_not_null: {x: 62.64, y: 34.1, fixed: false}
+  to_first: {x: 162.26, y: 148.92, fixed: false}
+  to_begin_first: {x: 301.88, y: 216.32, fixed: false}
+  one_left: {x: 367.45, y: 20, fixed: false}
+  restore_and_exit: {x: 501.57, y: 98.68, fixed: false}
+  first_is_small: {x: 562.23, y: 20, fixed: false}
+  restore_first: {x: 707.14, y: 54.82, fixed: false}
+  cut_second: {x: 695.77, y: 204.68, fixed: false}
+  return_and_copy: {x: 608.43, y: 334.07, fixed: false}
+  copy_first: {x: 527.2, y: 450.98, fixed: false}
+  carry0: {x: 398.8, y: 480, fixed: false}
+  carry0_in_second: {x: 275.72, y: 480, fixed: false}
+  set0_and_return: {x: 450.65, y: 422.22, fixed: false}
+  carry1: {x: 654.57, y: 480, fixed: false}
+  carry1_in_second: {x: 780, y: 480, fixed: false}
+  set1_and_return: {x: 755.87, y: 339, fixed: false}
+  delete_to_word: {x: 425.84, y: 326.14, fixed: false}
+  delete_to_word_in_sec: {x: 291.36, y: 354.71, fixed: false}
+  second_is_small: {x: 20, y: 170.92, fixed: false}
+  to_begin_first_and_del: {x: 20, y: 316.82, fixed: false}
+  delete_first: {x: 88.31, y: 442, fixed: false}
+  restore_second: {x: 178.6, y: 317.89, fixed: false}
+  fin: {x: 403.52, y: 230.41, fixed: false}
+editor contents: |-
+  input: '1010 010 1'
+  blank: ' '
+  start state: first_word
+  table:
+    
+    first_word:
+      0: {write: a, R: to_second}
+      1: {write: b, R: to_second}
+      [a, b]: R
+      ' ': {L: first_is_small}
+    
+    to_second:
+      [0, 1]: R
+      ' ': {R: second_word}
+   
+    second_word:
+      ' ': {L: one_left}
+      0: {write: a, L: to_first}
+      1: {write: b, L: to_first}
+      [a, b]: {R: second_not_null}
+    
+    second_not_null:
+      [a, b]: R
+      0: {write: a, L: to_first}
+      1: {write: b, L: to_first}
+      ' ': {L: second_is_small}
+    
+    to_first:
+      [a, b]: L
+      ' ': {L: to_begin_first}
+
+    to_begin_first:
+      [0, 1, a, b]: L
+      ' ': {R: first_word}
+
+    one_left:
+      ' ': {L: restore_and_exit}
+
+    restore_and_exit:
+      a: {write: 0, L}
+      b: {write: 1, L}
+      [0, 1]: L
+      ' ': {R: fin}
+    
+    # первое меньше, замена 2-го на 1-е
+    first_is_small:
+      [a, b]: L
+      ' ': {R: restore_first}
+
+    restore_first:
+      a: {write: 0, R}
+      b: {write: 1, R}
+      ' ': {R: cut_second}
+
+    cut_second:
+      [a, b, 0, 1]: {write: a, R}
+      ' ': {L: return_and_copy}
+
+    return_and_copy:
+      a: L
+      ' ': {L: copy_first}
+
+    copy_first:
+      [a, b]: L
+      0: {write: a, R: carry0}
+      1: {write: b, R: carry1}
+      ' ': {R: delete_to_word}
+
+    carry0:
+      [a, b]: R
+      ' ': {R: carry0_in_second}
+
+    carry0_in_second:
+      a: R
+      [0, 1, ' ']: {L: set0_and_return}
+
+    set0_and_return:
+      a: {write: 0, L: return_and_copy}
+      ' ': {L: return_and_copy}
+
+    carry1:
+      [a, b]: R
+      ' ': {R: carry1_in_second}
+    carry1_in_second:
+      a: R
+      [0, 1, ' ']: {L: set1_and_return}
+    set1_and_return:
+      a: {write: 1, L: return_and_copy}
+      ' ': {L: return_and_copy}
+
+    delete_to_word:
+      [a, b]: {write: ' ', R}
+      [0, 1]: {L: to_begin_first}
+      ' ': {R: delete_to_word_in_sec}
+
+    delete_to_word_in_sec:
+      [a, b]: {write: ' ', R}
+      [0, 1]: {L: to_begin_first}
+      ' ': {R: fin}
+    
+    # 2-е меньше
+    second_is_small:
+      [a, b]: L
+      ' ': {L: to_begin_first_and_del}
+
+    to_begin_first_and_del:
+      [0, 1, a, b]: L
+      ' ': {R: delete_first}
+
+    delete_first:
+      [0, 1, a, b]: {write: ' ', R}
+      ' ': {R: restore_second}
+
+    restore_second:
+      a: {write: 0, R}
+      b: {write: 1, R}
+      ' ': {L: to_begin_first}
+    fin:
